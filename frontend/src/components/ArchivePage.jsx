@@ -33,22 +33,38 @@ const ArchivePage = ({ onBack }) => {
                         <thead className="table-light">
                             <tr>
                                 <th className="py-3 px-4">المترشح</th>
+                                <th className="text-center">الهوية</th>
                                 <th className="text-center">الحالة</th>
+                                <th className="text-center">المدفوع</th>
+                                <th className="text-center">الباقي</th>
                                 <th className="text-center">الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {archived.map(c => (
-                                <tr key={c.id}>
-                                    <td className="py-3 px-4 fw-bold">{c.name}</td>
-                                    <td className="text-center"><StatusBadge status={c.status} /></td>
-                                    <td className="text-center">
-                                        <button className="btn btn-sm btn-light text-primary" title="استعادة" onClick={() => restoreCandidate(c.id)}>
-                                            <RotateCcw size={18} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            {archived.map(c => {
+                                const remaining = (Number(c.total_price) || 0) - (Number(c.total_paid) || 0);
+                                return (
+                                    <tr key={c.id}>
+                                        <td className="py-3 px-4">
+                                            <div className="fw-bold">{c.name}</div>
+                                            <small className="text-muted d-block">{c.address || 'بدون عنوان'}</small>
+                                        </td>
+                                        <td className="text-center text-muted">{c.national_id || '---'}</td>
+                                        <td className="text-center"><StatusBadge status={c.status} /></td>
+                                        <td className="text-center text-success fw-bold">{Number(c.total_paid || 0).toFixed(2)} DH</td>
+                                        <td className="text-center">
+                                            <span className={`badge rounded-pill ${remaining > 0 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success'}`}>
+                                                {remaining.toFixed(2)} DH
+                                            </span>
+                                        </td>
+                                        <td className="text-center">
+                                            <button className="btn btn-sm btn-light text-primary" title="استعادة" onClick={() => restoreCandidate(c.id)}>
+                                                <RotateCcw size={18} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

@@ -15,7 +15,7 @@ const SearchFilters = ({ searchTerm, setSearchTerm, filterLicense, setFilterLice
                         <input 
                             type="text" 
                             className="form-control border-start-0 ps-0 shadow-none" 
-                            placeholder="ابحث بالاسم أو رقم الهاتف..." 
+                            placeholder="ابحث بالاسم، رقم الهاتف أو رقم البطاقة الوطنية..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />

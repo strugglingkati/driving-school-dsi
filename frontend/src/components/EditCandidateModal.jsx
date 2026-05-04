@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Save, UserPen, Banknote, GraduationCap } from 'lucide-react';
+import { Save, UserPen, Banknote, GraduationCap, IdCard, MapPin } from 'lucide-react';
 
 const EditCandidateModal = ({ candidate, onClose, onUpdate }) => {
     const [formData, setFormData] = useState({ 
-        name: '', 
-        phone: '', 
-        license_type: '', 
+        name: '',
+        name_fr: '',
+        national_id: '',
+        phone: '',
+        address: '',
+        license_type: '',
         total_price: '',
-        status: '' // إضافة الحالة هنا
+        status: '' 
     });
 
     useEffect(() => {
         if (candidate) {
             setFormData({
                 name: candidate.name,
+                name_fr: candidate.name_fr || '',
+                national_id: candidate.national_id || '',
                 phone: candidate.phone || '',
-                license_type: candidate.license_type,
+                address: candidate.address || '',
+                license_type: candidate.license_type || 'B',
                 total_price: candidate.total_price || '',
-                status: candidate.status || 'جديد' // القيمة القادمة من قاعدة البيانات
+                status: candidate.status || 'جديد'
             });
         }
     }, [candidate]);
@@ -41,22 +47,34 @@ const EditCandidateModal = ({ candidate, onClose, onUpdate }) => {
                     <div className="modal-body p-4 text-end">
                         <form onSubmit={handleSubmit}>
                             <div className="row g-3">
-                                {/* الاسم الكامل */}
-                                <div className="col-12">
-                                    <label className="form-label small fw-bold text-muted">الاسم الكامل</label>
+                                <div className="col-12 col-md-6">
+                                    <label className="form-label small fw-bold text-muted">الاسم الكامل (عربي)</label>
                                     <input type="text" required className="form-control border-0 bg-light py-2 text-end"
                                         value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
                                 </div>
 
-                                {/* رقم الهاتف */}
-                                <div className="col-md-6">
+                                <div className="col-12 col-md-6">
+                                    <label className="form-label small fw-bold text-muted">الاسم الكامل (فرنسي)</label>
+                                    <input type="text" className="form-control border-0 bg-light py-2 text-end"
+                                        value={formData.name_fr} onChange={(e) => setFormData({...formData, name_fr: e.target.value})} />
+                                </div>
+
+                                <div className="col-12 col-md-4">
+                                    <label className="form-label small fw-bold text-muted">رقم البطاقة الوطنية</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text border-0 bg-white text-muted"><IdCard size={18} /></span>
+                                        <input type="text" className="form-control border-0 bg-light py-2 text-center rounded-start-3 shadow-none"
+                                            value={formData.national_id} onChange={(e) => setFormData({...formData, national_id: e.target.value})} />
+                                    </div>
+                                </div>
+
+                                <div className="col-12 col-md-4">
                                     <label className="form-label small fw-bold text-muted">رقم الهاتف</label>
                                     <input type="text" className="form-control border-0 bg-light py-2 text-center font-monospace"
                                         value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
                                 </div>
 
-                                {/* صنف الرخصة */}
-                                <div className="col-md-6">
+                                <div className="col-12 col-md-4">
                                     <label className="form-label small fw-bold text-muted">صنف الرخصة</label>
                                     <select className="form-select border-0 bg-light py-2 text-end"
                                         value={formData.license_type} onChange={(e) => setFormData({...formData, license_type: e.target.value})}>
@@ -65,8 +83,16 @@ const EditCandidateModal = ({ candidate, onClose, onUpdate }) => {
                                     </select>
                                 </div>
 
-                                {/* حقل الحالة الجديد */}
-                                <div className="col-12 mt-2">
+                                <div className="col-12">
+                                    <label className="form-label small fw-bold text-muted">العنوان الكامل</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text border-0 bg-white text-muted"><MapPin size={18} /></span>
+                                        <input type="text" className="form-control border-0 bg-light py-2 text-end"
+                                            value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
+                                    </div>
+                                </div>
+
+                                <div className="col-12">
                                     <label className="form-label small fw-bold text-muted d-flex align-items-center justify-content-end gap-2">
                                         حالة المترشح الحالية <GraduationCap size={16} className="text-info" />
                                     </label>
@@ -80,7 +106,6 @@ const EditCandidateModal = ({ candidate, onClose, onUpdate }) => {
                                     </select>
                                 </div>
 
-                                {/* الثمن الكلي */}
                                 <div className="col-12 mt-4 p-3 bg-danger-subtle rounded-3 text-center">
                                     <label className="form-label small fw-bold text-danger d-flex align-items-center justify-content-center gap-2">
                                         تعديل الثمن الكلي <Banknote size={16} />
@@ -90,7 +115,6 @@ const EditCandidateModal = ({ candidate, onClose, onUpdate }) => {
                                 </div>
                             </div>
 
-                            {/* أزرار التحكم */}
                             <div className="d-flex gap-2 flex-row-reverse mt-4">
                                 <button type="submit" className="btn btn-primary flex-grow-1 fw-bold py-2 shadow-sm border-0">
                                     حفظ التغييرات <Save size={18} className="ms-2" />

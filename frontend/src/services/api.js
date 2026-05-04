@@ -14,5 +14,6 @@ export const setAuthToken = (token) => {
 
 export const login = (credentials) => API.post('/auth/login', credentials);
 export const logout = () => API.post('/auth/logout');
+export const verifyToken = () => API.get('/auth/verify');
 export const registerCandidate = (data) => API.post('/candidates/add', data);
 export default API;

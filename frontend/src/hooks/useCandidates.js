@@ -74,7 +74,12 @@ export const useCandidates = (showToast) => {
     // منطق الفلترة والبحث
     const filteredCandidates = candidates.filter(c => {
         if (c.is_archived) return false;
-        const matchesSearch = c.name?.toLowerCase().includes(searchTerm.toLowerCase()) || c.phone?.includes(searchTerm);
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch =
+            c.name?.toLowerCase().includes(searchLower) ||
+            c.name_fr?.toLowerCase().includes(searchLower) ||
+            c.national_id?.includes(searchTerm) ||
+            c.phone?.includes(searchTerm);
         const matchesLicense = filterLicense === 'All' || c.license_type === filterLicense;
         const hasDebt = (Number(c.total_price) || 0) - (Number(c.total_paid) || 0) > 0;
         return matchesSearch && matchesLicense && (!showOnlyDebt || hasDebt);

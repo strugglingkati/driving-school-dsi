@@ -1,4 +1,6 @@
 require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -29,11 +31,23 @@ db.getConnection()
     .catch(err => console.error('❌ Connection Failed:', err.message));
 app.use('/api/auth', authRoutes);
 app.use('/api/candidates', candidateRoutes); // لاحظ حرف s في candidates
-app.use('/api/appointments', appointmentRoutes); 
+app.use('/api/appointments', appointmentRoutes);
 
-app.get('/', (req, res) => {
-    res.json({ message: "🚀 Backend is Running!" });
-});
+const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDist)) {
+    app.use(express.static(frontendDist));
+
+    app.get(/.*/, (req, res) => {
+        if (req.path.startsWith('/api/')) {
+            return res.status(404).json({ error: 'API route not found' });
+        }
+        res.sendFile(path.join(frontendDist, 'index.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.json({ message: "🚀 Backend is Running!" });
+    });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

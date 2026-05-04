@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const crypto = require('crypto');
+const { authenticate } = require('../middlewares/authMiddleware');
 
 // Initialize users table on startup
 const initUsersTable = async () => {
@@ -127,6 +128,36 @@ router.get('/verify', async (req, res) => {
         });
     } catch (error) {
         res.status(401).json({ error: 'Token validation failed' });
+    }
+});
+
+// تغيير كلمة المرور (مطلوب تسجيل الدخول)
+router.post('/change-password', authenticate, async (req, res) => {
+    const { current, newPassword } = req.body;
+    if (!current || !newPassword || newPassword.length < 6) {
+        return res.status(400).json({ error: 'كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل' });
+    }
+    try {
+        const [users] = await db.query('SELECT password_hash FROM users WHERE id = ?', [req.user.id]);
+        if (!users.length || users[0].password_hash !== hashPassword(current)) {
+            return res.status(400).json({ error: 'كلمة المرور الحالية غير صحيحة' });
+        }
+        await db.query('UPDATE users SET password_hash = ? WHERE id = ?', [hashPassword(newPassword), req.user.id]);
+        res.json({ success: true, message: 'تم تغيير كلمة المرور بنجاح' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// قائمة المستخدمين (مطلوب تسجيل الدخول)
+router.get('/users', authenticate, async (req, res) => {
+    try {
+        const [users] = await db.query(
+            'SELECT id, username, full_name, role, is_active, created_at FROM users ORDER BY created_at DESC'
+        );
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 

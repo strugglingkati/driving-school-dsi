@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o - -w \"\\\\nHTTP_STATUS:%{http_code}\" http://localhost:5000/api/candidates/test-c -H \"Authorization: Bearer test\")",
+      "Bash(curl -s -o - -w \"\\\\nHTTP_STATUS:%{http_code}\" http://localhost:5000/api/candidates/payments/all -H \"Authorization: Bearer test\")",
+      "Bash(curl -s -o - -w \"\\\\nHTTP_STATUS:%{http_code}\" http://localhost:5000/api/candidates/stats/summary -H \"Authorization: Bearer test\")",
+      "Bash(curl -s -X POST http://localhost:5000/api/auth/login -H \"Content-Type: application/json\" -d \"{\\\\\"username\\\\\":\\\\\"admin\\\\\",\\\\\"password\\\\\":\\\\\"admin123\\\\\"}\")",
+      "Bash(curl -s -o - -w '\\\\nHTTP_STATUS:%{http_code}' http://localhost:5000/api/candidates/payments/all -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199')",
+      "Bash(curl -s -o - -w '\\\\nHTTP_STATUS:%{http_code}' http://localhost:5000/api/candidates/stats/summary -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199')",
+      "Bash(curl -sv http://localhost:5000/api/candidates/payments/all -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199')",
+      "Bash(curl -s -o - -w '\\\\nHTTP:%{http_code}' http://localhost:5000/api/appointments/all -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199')",
+      "Bash(curl -s -w '\\\\nHTTP:%{http_code}' http://localhost:5000/api/candidates/ -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199')",
+      "Bash(curl -s -w '\\\\nHTTP:%{http_code}' http://localhost:5000/api/candidates/export -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199')",
+      "Bash(curl -s -X PUT -w '\\\\nHTTP:%{http_code}' http://localhost:5000/api/candidates/payments/all -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199' -H 'Content-Type: application/json' -d '{\"amount\":100}')",
+      "Bash(curl -s -w '\\\\nHTTP:%{http_code}' -X PUT http://localhost:5000/api/candidates/payments/123 -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199' -H 'Content-Type: application/json' -d '{\"amount\":100}')",
+      "Bash(curl -s -w '\\\\nHTTP:%{http_code}' http://localhost:5000/api/candidates/payments/add -H 'Authorization: Bearer 9e2cefe75b607e7e19c9f6793ff3b92d93b895578658cffae6dbc2c055d9e199')"
+    ]
+  }
+}

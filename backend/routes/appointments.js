@@ -36,4 +36,15 @@ router.post('/add', async (req, res) => {
     }
 });
 
-module.exports = router; // ⚠️ تأكد من وجود هذا السطر
+// حذف موعد
+router.delete('/:id', async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM appointments WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'الموعد غير موجود' });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+module.exports = router;

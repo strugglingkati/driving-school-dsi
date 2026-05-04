@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { ShieldCheck, Lock, User } from 'lucide-react';
+import { ShieldCheck, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { login } from '../services/api';
 
 const Login = ({ onLogin, showToast }) => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
+            const response = await login(credentials);
             onLogin(response.data);
             showToast('تم تسجيل الدخول بنجاح', 'success');
         } catch (error) {
@@ -53,18 +54,25 @@ const Login = ({ onLogin, showToast }) => {
                         <div className="input-group input-group-lg rounded-4 overflow-hidden bg-white shadow-sm">
                             <span className="input-group-text border-0 bg-white"><Lock size={18} /></span>
                             <input
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 className="form-control border-0"
                                 placeholder="••••••••"
                                 value={credentials.password}
                                 onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                                 required
                             />
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary border-0"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
 
                     <button type="submit" className="btn btn-primary w-100 py-3 rounded-4 shadow-sm" disabled={loading}>
-                        {loading ? 'جاري التسجيل...' : 'دخول'}
+                        {loading ? 'جاري تسجيل الدخول...' : 'دخول'}
                     </button>
                 </form>
             </div>

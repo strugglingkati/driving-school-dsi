@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { UserPlus, Banknote } from 'lucide-react'; // تم تصحيح الاستيراد هنا
+import { UserPlus, Banknote, IdCard, MapPin } from 'lucide-react';
 
 const AddCandidate = ({ onCandidateAdded, showToast }) => {
     const [formData, setFormData] = useState({
         name: '',
+        name_fr: '',
+        national_id: '',
         phone: '',
+        address: '',
         license_type: 'B',
         total_price: ''
     });
@@ -13,14 +16,9 @@ const AddCandidate = ({ onCandidateAdded, showToast }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // إرسال البيانات للسيرفر
             await axios.post('http://localhost:5000/api/candidates/add', formData);
             showToast("تمت إضافة المترشح بنجاح", "success");
-            
-            // تفريغ النموذج
-            setFormData({ name: '', phone: '', license_type: 'B', total_price: '' });
-            
-            // تحديث القائمة الرئيسية
+            setFormData({ name: '', name_fr: '', national_id: '', phone: '', address: '', license_type: 'B', total_price: '' });
             if (onCandidateAdded) onCandidateAdded();
         } catch (err) {
             showToast(err.response?.data?.error || "خطأ في إضافة المترشح", "error");
@@ -36,18 +34,43 @@ const AddCandidate = ({ onCandidateAdded, showToast }) => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="row g-3">
-                    <div className="col-md-4">
-                        <label className="form-label small fw-bold text-muted">الاسم الكامل</label>
+                    <div className="col-md-6">
+                        <label className="form-label small fw-bold text-muted">الاسم الكامل (عربي)</label>
                         <input 
                             type="text" required
                             className="form-control border-0 bg-light py-2 px-3 text-end rounded-3 shadow-none"
-                            placeholder="محمد أمين..."
+                            placeholder="محمد أمين"
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
                         />
                     </div>
 
-                    <div className="col-md-3">
+                    <div className="col-md-6">
+                        <label className="form-label small fw-bold text-muted">الاسم الكامل (فرنسي)</label>
+                        <input 
+                            type="text"
+                            className="form-control border-0 bg-light py-2 px-3 text-end rounded-3 shadow-none"
+                            placeholder="Mohamed Amine"
+                            value={formData.name_fr}
+                            onChange={(e) => setFormData({...formData, name_fr: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="col-md-4">
+                        <label className="form-label small fw-bold text-muted d-block">رقم البطاقة الوطنية</label>
+                        <div className="input-group">
+                            <span className="input-group-text border-0 bg-white text-muted"><IdCard size={18} /></span>
+                            <input 
+                                type="text"
+                                className="form-control border-0 bg-light py-2 px-3 text-center rounded-start-3 shadow-none"
+                                placeholder="AB123456"
+                                value={formData.national_id}
+                                onChange={(e) => setFormData({...formData, national_id: e.target.value})}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-md-4">
                         <label className="form-label small fw-bold text-muted d-block">رقم الهاتف</label>
                         <input 
                             type="text"
@@ -58,7 +81,7 @@ const AddCandidate = ({ onCandidateAdded, showToast }) => {
                         />
                     </div>
 
-                    <div className="col-md-2">
+                    <div className="col-md-4">
                         <label className="form-label small fw-bold text-muted d-block">صنف الرخصة</label>
                         <select 
                             className="form-select border-0 bg-light py-2 text-end fw-bold rounded-3 shadow-none"
@@ -72,7 +95,21 @@ const AddCandidate = ({ onCandidateAdded, showToast }) => {
                         </select>
                     </div>
 
-                    <div className="col-md-3">
+                    <div className="col-12">
+                        <label className="form-label small fw-bold text-muted">العنوان الكامل</label>
+                        <div className="input-group">
+                            <span className="input-group-text border-0 bg-white text-muted"><MapPin size={18} /></span>
+                            <input 
+                                type="text"
+                                className="form-control border-0 bg-light py-2 px-3 text-end rounded-start-3 shadow-none"
+                                placeholder="شارع الكرامة، الدار البيضاء"
+                                value={formData.address}
+                                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-md-4">
                         <label className="form-label small fw-bold text-danger d-block">الثمن المتفق عليه (DH)</label>
                         <div className="input-group">
                             <span className="input-group-text border-0 bg-danger-subtle text-danger"><Banknote size={18}/></span>

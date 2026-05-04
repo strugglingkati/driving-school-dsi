@@ -2,6 +2,8 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@openrouter/agent": "^0.4.0",
+    "dotenv": "^17.4.2",
+    "openai": "^6.36.0",
     "zod": "^4.4.2"
   }
 }
